@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Weather</string>
+    <string name="weather_title">Today\'s Weather</string>
+    <string name="temperature_label">Temperature</string>
+    <string name="error_message">Something went wrong</string>
+    <string name="city_cant_be_empty">City name cannot be empty</string>
+    <string name="something_wrong">Something went wrong</string>
+    <string name="enter_city">Enter city</string>
+    <string name="get_weather">Get Weather</string>
+    <string name="error_prefix">Error:</string>
+    <string name="weather_clear">Clear sky</string>
+    <string name="weather_cloudy">Partly cloudy</string>
+    <string name="weather_foggy">Foggy</string>
+    <string name="weather_drizzle">Drizzle</string>
+    <string name="weather_rainy">Rainy</string>
+    <string name="weather_snowy">Snowy</string>
+    <string name="weather_showers">Showers</string>
+    <string name="weather_thunderstorm">Thunderstorm</string>
+    <string name="weather_severe_thunderstorm">Severe Thunderstorm</string>
+    <string name="weather_unknown">Unknown</string>
+    <string name="no_network">"No Internet Connection"</string>
+</resources>
