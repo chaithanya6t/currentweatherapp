@@ -1,49 +1,39 @@
 package com.sample.weather.presentation.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sample.weather.R
 import com.sample.weather.domain.model.usecase.GetWeatherUseCase
-import com.sample.weather.repository.WeatherInfo
+import com.sample.weather.presentation.state.WeatherState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
     private val getWeatherUseCase: GetWeatherUseCase,
-    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    private val _weatherInfo = MutableStateFlow<WeatherInfo?>(null)
-    val weatherInfo: StateFlow<WeatherInfo?> = _weatherInfo
+    private val _weatherState = MutableStateFlow<WeatherState>(WeatherState.Loading)
+    val weatherState: StateFlow<WeatherState> = _weatherState
 
-    private val _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage: StateFlow<String?> = _errorMessage
-
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading
-
-    fun fetchWeatherByLocation(lat: Double, lon: Double) {
+    fun fetchWeatherByLocation(lat: Double, lon: Double,defaultError: String) {
         viewModelScope.launch {
-            _isLoading.value = true
+            _weatherState.value = WeatherState.Loading
             try {
-                val result = getWeatherUseCase(lat, lon)
-                _weatherInfo.value = result
-                _errorMessage.value = null
+                val weatherInfo = getWeatherUseCase(lat, lon)
+                _weatherState.value = WeatherState.Success(weatherInfo)
             } catch (e: Exception) {
-                _errorMessage.value = e.message ?: context.getString(R.string.something_wrong)
-            } finally {
-                _isLoading.value = false
+                _weatherState.value = WeatherState.Error.Generic(
+                    e.message ?: defaultError
+                )
             }
         }
     }
 
-    fun setErrorMessage(message: String) {
-        _errorMessage.value = message
+    fun setError(message: String) {
+        _weatherState.value = WeatherState.Error.Generic(message)
     }
 
 }

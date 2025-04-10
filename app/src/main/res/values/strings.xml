@@ -19,4 +19,12 @@
     <string name="weather_severe_thunderstorm">Severe Thunderstorm</string>
     <string name="weather_unknown">Unknown</string>
     <string name="no_network">"No Internet Connection"</string>
+     <string name="fetching_weather">Fetching weather…</string>
+     <string name="location_permission_denied">Location permission denied</string>
+     <string name="unable_to_fetch_location">Unable to fetch location</string>
+    <string name="current_weather">Current Weather</string>
+    <string name="condition">Condition</string>
+    <string name="wind_spped">Wind Speed</string>
+    <string name="time_label">Time</string>
+
 </resources>

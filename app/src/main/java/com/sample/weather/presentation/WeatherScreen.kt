@@ -12,11 +12,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.permissions.*
 import com.sample.weather.R
+import com.sample.weather.presentation.state.WeatherState
 import com.sample.weather.presentation.viewmodel.WeatherViewModel
 import com.sample.weather.repository.WeatherInfo
 import com.sample.weather.utils.LocationHelper
@@ -28,9 +30,7 @@ fun WeatherScreen(viewModel: WeatherViewModel = hiltViewModel()) {
     val permissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
     val locationHelper = remember { LocationHelper(context) }
 
-    val weatherInfo by viewModel.weatherInfo.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-    val error by viewModel.errorMessage.collectAsState()
+    val state by viewModel.weatherState.collectAsState()
 
     var hasRequested by rememberSaveable { mutableStateOf(false) }
 
@@ -45,14 +45,14 @@ fun WeatherScreen(viewModel: WeatherViewModel = hiltViewModel()) {
         if (permissionState.status.isGranted) {
             locationHelper.getLastKnownLocation(
                 onLocationReceived = { lat, lon ->
-                    viewModel.fetchWeatherByLocation(lat, lon)
+                    viewModel.fetchWeatherByLocation(lat, lon, context.getString(R.string.something_wrong))
                 },
                 onFailure = {
-                    viewModel.setErrorMessage("Unable to fetch location")
+                    viewModel.setError(context.getString(R.string.unable_to_fetch_location))
                 }
             )
         } else if (permissionState.status.shouldShowRationale.not()) {
-            viewModel.setErrorMessage("Location permission denied")
+            viewModel.setError(context.getString(R.string.location_permission_denied))
         }
     }
 
@@ -62,25 +62,27 @@ fun WeatherScreen(viewModel: WeatherViewModel = hiltViewModel()) {
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
-        when {
-            isLoading -> {
+        when (state){
+            is WeatherState.Loading -> {
                 CircularProgressIndicator()
             }
 
-            error != null -> {
+            is WeatherState.Error.Generic -> {
+                val errorMessage = (state as WeatherState.Error.Generic).message
                 Text(
-                    text = "Error: $error",
+                    text = stringResource(R.string.error_prefix)+errorMessage,
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
 
-            weatherInfo != null -> {
-                WeatherCard(weatherInfo = weatherInfo!!)
+            is WeatherState.Success -> {
+                val weatherInfo = (state as WeatherState.Success).data
+                WeatherCard(weatherInfo = weatherInfo)
             }
 
             else -> {
-                Text("Fetching weather...", style = MaterialTheme.typography.bodyMedium)
+                Text(context.getString(R.string.fetching_weather), style = MaterialTheme.typography.bodyMedium)
             }
         }
     }
@@ -96,17 +98,16 @@ fun WeatherCard(weatherInfo: WeatherInfo) {
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Text(
-                text = "Current Weather",
+                text = stringResource(R.string.current_weather),
                 style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            WeatherRow(iconRes = R.drawable.thermostat, label = "Temperature", value = "${weatherInfo.temperature} °C")
-
-            WeatherRow(iconRes = R.drawable.clearsky, label = "Condition", value = weatherInfo.condition)
-            WeatherRow(iconRes = R.drawable.windy, label = "Wind Speed", value = "${weatherInfo.windSpeed} km/h")
-            WeatherRow(iconRes = R.drawable.time, label = "Time", value = weatherInfo.time)
+            WeatherRow(iconRes = R.drawable.thermostat, label = stringResource(R.string.temperature_label), value = "${weatherInfo.temperature} °C")
+            WeatherRow(iconRes = R.drawable.clearsky, label = stringResource(R.string.condition) , value = weatherInfo.condition)
+            WeatherRow(iconRes = R.drawable.windy, label = stringResource(R.string.wind_spped) , value = "${weatherInfo.windSpeed} km/h")
+            WeatherRow(iconRes = R.drawable.time, label =  stringResource(R.string.time_label) , value = weatherInfo.time)
         }
     }
 }
