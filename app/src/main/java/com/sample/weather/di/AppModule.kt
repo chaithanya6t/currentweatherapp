@@ -1,6 +1,7 @@
 package com.sample.weather.di
 
 import android.content.Context
+import com.sample.weather.core.utils.AppConstants
 import com.sample.weather.data.remote.api.WeatherApi
 import com.sample.weather.domain.model.usecase.GetWeatherUseCase
 import com.sample.weather.domain.model.usecase.WeatherRepositoryImpl
@@ -22,7 +23,7 @@ object AppModule {
     @Singleton
     fun provideWeatherApi(): WeatherApi =
          Retrofit.Builder()
-            .baseUrl("https://api.open-meteo.com/v1/")
+            .baseUrl(AppConstants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(WeatherApi::class.java)

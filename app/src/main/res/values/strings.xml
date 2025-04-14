@@ -26,5 +26,9 @@
     <string name="condition">Condition</string>
     <string name="wind_spped">Wind Speed</string>
     <string name="time_label">Time</string>
+    <string name="network_error_occurred">Network error, Please check your internet connection.</string>
+    <string name="server_error_occurred">Server error: %1$d %2$s</string>
+    <string name="unexpected_error_occurred">Unexpected error: %1$s</string>
+
 
 </resources>

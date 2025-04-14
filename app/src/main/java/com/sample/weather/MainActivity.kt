@@ -15,8 +15,8 @@ import androidx.core.app.ActivityCompat
 import com.sample.weather.presentation.WeatherScreen
 import com.sample.weather.presentation.theme.WeatherTheme
 import com.sample.weather.presentation.viewmodel.WeatherViewModel
-import com.sample.weather.utils.LocationHelper
-import com.sample.weather.utils.NetworkUtil
+import com.sample.weather.core.utils.LocationHelper
+import com.sample.weather.core.utils.NetworkUtil
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -76,7 +76,7 @@ class MainActivity : ComponentActivity() {
     private fun fetchLocationWeather() {
         locationHelper.getLastKnownLocation(
             onLocationReceived = { lat, lon ->
-                viewModel.fetchWeatherByLocation(lat, lon)
+                viewModel.fetchWeatherByLocation(lat, lon,getString(R.string.something_wrong))
             },
             onFailure = {
                 Toast.makeText(

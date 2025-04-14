@@ -1,4 +1,4 @@
-package com.sample.weather.utils
+package com.sample.weather.core.utils
 
 import android.content.Context
 import com.sample.weather.R

@@ -1,6 +1,6 @@
 @file:Suppress("MissingPermission")
 
-package com.sample.weather.utils
+package com.sample.weather.core.utils
 
 
 import android.annotation.SuppressLint
@@ -8,7 +8,7 @@ import android.content.Context
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
-class LocationHelper(private val context: Context) {
+class LocationHelper(context: Context) {
 
     private val fusedLocationClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(context)

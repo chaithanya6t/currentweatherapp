@@ -21,7 +21,7 @@ import com.sample.weather.R
 import com.sample.weather.presentation.state.WeatherState
 import com.sample.weather.presentation.viewmodel.WeatherViewModel
 import com.sample.weather.repository.WeatherInfo
-import com.sample.weather.utils.LocationHelper
+import com.sample.weather.core.utils.LocationHelper
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
